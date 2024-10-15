@@ -6,8 +6,14 @@
 #include <pthread.h>
 #include <time.h>
 #include <sys/time.h>
+#include "generated/gui_guider.h"
+#include "custom/custom.h"
+#include "generated/events_init.h"
+#include "lv_port_indev.h"
 
-#define DISP_BUF_SIZE (128 * 1024)
+#define DISP_BUF_SIZE (320 * 240)
+
+lv_ui guider_ui;
 
 int main(void)
 {
@@ -29,10 +35,11 @@ int main(void)
     lv_disp_drv_init(&disp_drv);
     disp_drv.draw_buf   = &disp_buf;
     disp_drv.flush_cb   = fbdev_flush;
-    disp_drv.hor_res    = 800;
-    disp_drv.ver_res    = 480;
+    disp_drv.hor_res    = 320;
+    disp_drv.ver_res    = 240;
     lv_disp_drv_register(&disp_drv);
 
+#if 0
     evdev_init();
     static lv_indev_drv_t indev_drv_1;
     lv_indev_drv_init(&indev_drv_1); /*Basic initialization*/
@@ -48,15 +55,21 @@ int main(void)
     lv_obj_t * cursor_obj = lv_img_create(lv_scr_act()); /*Create an image object for the cursor */
     lv_img_set_src(cursor_obj, &mouse_cursor_icon);           /*Set the image source*/
     lv_indev_set_cursor(mouse_indev, cursor_obj);             /*Connect the image  object to the driver*/
-
+#endif
 
     /*Create a Demo*/
-    lv_demo_widgets();
+    //lv_demo_widgets();
+
+    setup_ui(&guider_ui);
+    events_init(&guider_ui);
+    custom_init(&guider_ui);
+    lv_port_indev_init();
+    //indev_init();
 
     /*Handle LitlevGL tasks (tickless mode)*/
     while(1) {
         lv_timer_handler();
-        usleep(5000);
+        usleep(1000);
     }
 
     return 0;
