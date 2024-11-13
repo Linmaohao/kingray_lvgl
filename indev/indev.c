@@ -44,8 +44,8 @@ typedef enum {
 
 static bool encoder_confirm_pressed = false;            // 编码器确认键状态
 static encoder_state_t encoder_state = ENCODER_IDLE;    // 初始状态为静止
-static unsigned short last_encoder_value = 0xFFFF;      // 上一次读取的值
-static unsigned short last_key_value = 0xFFFF;          // 上一次读取的值
+static unsigned short last_encoder_value = 0xFFFF;      // encoder上一次读取的值
+static unsigned short last_key_value = 0xFFFF;          // keypad上一次读取的值
 
 // 导出GPIO引脚，使其可用
 void gpio_export(int pin) {
