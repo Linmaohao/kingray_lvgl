@@ -345,25 +345,40 @@ void setup_scr_main_page(lv_ui *ui)
 	// lv_obj_add_flag(ui->main_page_vu_page[1], LV_OBJ_FLAG_HIDDEN);
 
 	/*TEST button !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-	ui->main_page_btn_test = lv_btn_create(ui->main_page);
-	ui->main_page_btn_test_label = lv_label_create(ui->main_page_btn_test);
-	lv_label_set_text(ui->main_page_btn_test_label, "test");
-	lv_label_set_long_mode(ui->main_page_btn_test_label, LV_LABEL_LONG_WRAP);
-	lv_obj_align(ui->main_page_btn_test_label, LV_ALIGN_CENTER, 0, 0);
-	lv_obj_set_style_pad_all(ui->main_page_btn_test, 0, LV_STATE_DEFAULT);
-	lv_obj_set_pos(ui->main_page_btn_test, 278, 85);
-	lv_obj_set_size(ui->main_page_btn_test, 35, 26);
+	// ui->main_page_btn_test = lv_btn_create(ui->main_page);
+	// ui->main_page_btn_test_label = lv_label_create(ui->main_page_btn_test);
+	// lv_label_set_text(ui->main_page_btn_test_label, "test");
+	// lv_label_set_long_mode(ui->main_page_btn_test_label, LV_LABEL_LONG_WRAP);
+	// lv_obj_align(ui->main_page_btn_test_label, LV_ALIGN_CENTER, 0, 0);
+	// lv_obj_set_style_pad_all(ui->main_page_btn_test, 0, LV_STATE_DEFAULT);
+	// lv_obj_set_pos(ui->main_page_btn_test, 278, 85);
+	// lv_obj_set_size(ui->main_page_btn_test, 35, 26);
 
-	lv_obj_set_style_bg_opa(ui->main_page_btn_test, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_bg_color(ui->main_page_btn_test, lv_color_hex(0x2195f6), LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_bg_grad_dir(ui->main_page_btn_test, LV_GRAD_DIR_NONE, LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_border_width(ui->main_page_btn_test, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_radius(ui->main_page_btn_test, 5, LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_shadow_width(ui->main_page_btn_test, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_text_color(ui->main_page_btn_test, lv_color_hex(0xffffff), LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_text_font(ui->main_page_btn_test, &lv_font_montserratMedium_16, LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_text_opa(ui->main_page_btn_test, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_text_align(ui->main_page_btn_test, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_bg_opa(ui->main_page_btn_test, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_bg_color(ui->main_page_btn_test, lv_color_hex(0x2195f6), LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_bg_grad_dir(ui->main_page_btn_test, LV_GRAD_DIR_NONE, LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_border_width(ui->main_page_btn_test, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_radius(ui->main_page_btn_test, 5, LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_shadow_width(ui->main_page_btn_test, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_text_color(ui->main_page_btn_test, lv_color_hex(0xffffff), LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_text_font(ui->main_page_btn_test, &lv_font_montserratMedium_16, LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_text_opa(ui->main_page_btn_test, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_text_align(ui->main_page_btn_test, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN|LV_STATE_DEFAULT);
+
+	//Write codes main_page_group
+	ui->main_page_group = lv_group_create();
+    //lv_indev_set_group(indev_keypad, ui->main_page_group);
+    lv_indev_set_group(indev_encoder, ui->main_page_group);
+
+	lv_group_add_obj(ui->main_page_group, ui->main_page);
+	lv_group_focus_obj(ui->main_page);
+
+	// // 检查焦点状态
+	// if (lv_group_get_focused(ui->main_page_group) == ui->main_page) {
+	// 	printf("Object focused successfully.\n");
+	// } else {
+	// 	printf("Failed to focus object.\n");
+	// }
 
 	//Update current screen layout.
 	lv_obj_update_layout(ui->main_page);

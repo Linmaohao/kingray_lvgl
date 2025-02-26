@@ -31,12 +31,38 @@ static void load_page_bar_load_event_handler (lv_event_t *e)
 	}
 }
 
-static void main_page_btn_test_event_handler (lv_event_t *e)
+// static void main_page_btn_test_event_handler (lv_event_t *e)
+// {
+// 	lv_event_code_t code = lv_event_get_code(e);
+
+// 	switch (code) {
+// 	case LV_EVENT_CLICKED:
+// 	{
+// 		// ui_load_scr_animation(&guider_ui, &guider_ui.standby_page, guider_ui.standby_page_del, &guider_ui.main_page_del, setup_scr_standby_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+// 		ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.main_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+// 		// ui_load_scr_animation(&guider_ui, &guider_ui.info_page, guider_ui.info_page_del, &guider_ui.main_page_del, setup_scr_info_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+// 		// ui_load_scr_animation(&guider_ui, &guider_ui.screen_page, guider_ui.screen_page_del, &guider_ui.main_page_del, setup_scr_screen_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+// 		// ui_load_scr_animation(&guider_ui, &guider_ui.preset_page, guider_ui.preset_page_del, &guider_ui.main_page_del, setup_scr_preset_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+// 		// ui_load_scr_animation(&guider_ui, &guider_ui.rename_page, guider_ui.rename_page_del, &guider_ui.main_page_del, setup_scr_rename_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+// 		// ui_load_scr_animation(&guider_ui, &guider_ui.ipset_page, guider_ui.ipset_page_del, &guider_ui.main_page_del, setup_scr_ipset_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+// 		// ui_load_scr_animation(&guider_ui, &guider_ui.source_page, guider_ui.source_page_del, &guider_ui.main_page_del, setup_scr_source_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+// 		// ui_load_scr_animation(&guider_ui, &guider_ui.volume_page, guider_ui.volume_page_del, &guider_ui.main_page_del, setup_scr_volume_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+// 		// ui_load_scr_animation(&guider_ui, &guider_ui.status_page, guider_ui.status_page_del, &guider_ui.main_page_del, setup_scr_status_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+
+// 		break;
+// 	}
+// 	default:
+// 		break;
+// 	}
+// }
+
+static void main_page_event_handler (lv_event_t *e)
 {
 	lv_event_code_t code = lv_event_get_code(e);
 
 	switch (code) {
-	case LV_EVENT_CLICKED:
+	// case LV_EVENT_CLICKED:	// 按下第一次是FOCUSED
+	case LV_EVENT_FOCUSED:
 	{
 		// ui_load_scr_animation(&guider_ui, &guider_ui.standby_page, guider_ui.standby_page_del, &guider_ui.main_page_del, setup_scr_standby_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
 		ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.main_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
@@ -60,6 +86,10 @@ static void menu_page_item_event_handler (lv_event_t *e)
 {
 	lv_event_code_t code = lv_event_get_code(e);
 	lv_obj_t *obj = lv_event_get_target(e);
+	// if (code >= LV_EVENT_COVER_CHECK && code <= LV_EVENT_DRAW_PART_END) {
+	// } else {
+		// printf("code = %d\n", code);
+	// }
 	switch (code) {
 	case LV_EVENT_CLICKED:
 	{
@@ -404,7 +434,8 @@ void events_init_load_page(lv_ui *ui)
 
 void events_init_main_page(lv_ui *ui)
 {
-	lv_obj_add_event_cb(ui->main_page_btn_test, main_page_btn_test_event_handler, LV_EVENT_ALL, NULL);
+	//lv_obj_add_event_cb(ui->main_page_btn_test, main_page_btn_test_event_handler, LV_EVENT_ALL, NULL);
+	lv_obj_add_event_cb(ui->main_page, main_page_event_handler, LV_EVENT_ALL, NULL);
 }
 
 void events_init_menu_page(lv_ui *ui)
@@ -412,7 +443,8 @@ void events_init_menu_page(lv_ui *ui)
 	for (int i = 0; i < MENU_E_NUM; i++) {
 		event_data_t *event_data = (event_data_t *)malloc(sizeof(event_data_t));
 		event_data->number = i;
-		lv_obj_add_event_cb(ui->menu_page_item_container[i], menu_page_item_event_handler, LV_EVENT_ALL, event_data);
+		// lv_obj_add_event_cb(ui->menu_page_item_container[i], menu_page_item_event_handler, LV_EVENT_ALL, event_data);
+		lv_obj_add_event_cb(ui->menu_page_item_container[i], menu_page_item_event_handler, LV_EVENT_CLICKED, event_data);
 	}
 	lv_obj_add_event_cb(ui->menu_page_lock, menu_page_lock_event_handler, LV_EVENT_ALL, NULL);
 }

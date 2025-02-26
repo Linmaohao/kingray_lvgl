@@ -248,7 +248,7 @@ operate_status_t indev_scan_key(void){
 
     if (current_value != last_key_value) {              // 检测变化
         //printf("encoder_state = %d", encoder_state);
-        printf("Key data changed: 0x%04X  --> 0x%04X\n", last_key_value, current_value);
+        //printf("Key data changed: 0x%04X  --> 0x%04X\n", last_key_value, current_value);
         last_key_value = current_value;                 // 更新最后的值
 
         return handle_key(current_value);

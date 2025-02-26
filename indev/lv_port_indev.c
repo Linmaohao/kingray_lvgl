@@ -60,7 +60,8 @@ void lv_port_indev_init(void)
      *  You should shape them according to your hardware
      */
 
-    static lv_indev_drv_t indev_drv;
+    static lv_indev_drv_t indev_drv_keypad;
+    static lv_indev_drv_t indev_drv_encoder;
 
     /*------------------
      * Keypad
@@ -70,10 +71,10 @@ void lv_port_indev_init(void)
     keypad_init();
 
     /*Register a keypad input device*/
-    lv_indev_drv_init(&indev_drv);
-    indev_drv.type = LV_INDEV_TYPE_KEYPAD;
-    indev_drv.read_cb = keypad_read;
-    indev_keypad = lv_indev_drv_register(&indev_drv);
+    lv_indev_drv_init(&indev_drv_keypad);
+    indev_drv_keypad.type = LV_INDEV_TYPE_KEYPAD;
+    indev_drv_keypad.read_cb = keypad_read;
+    indev_keypad = lv_indev_drv_register(&indev_drv_keypad);
 
     /*Later you should create group(s) with `lv_group_t * group = lv_group_create()`,
      *add objects to the group with `lv_group_add_obj(group, obj)`
@@ -88,10 +89,10 @@ void lv_port_indev_init(void)
     encoder_init();
 
     /*Register a encoder input device*/
-    lv_indev_drv_init(&indev_drv);
-    indev_drv.type = LV_INDEV_TYPE_ENCODER;
-    indev_drv.read_cb = encoder_read;
-    indev_encoder = lv_indev_drv_register(&indev_drv);
+    lv_indev_drv_init(&indev_drv_encoder);
+    indev_drv_encoder.type = LV_INDEV_TYPE_ENCODER;
+    indev_drv_encoder.read_cb = encoder_read;
+    indev_encoder = lv_indev_drv_register(&indev_drv_encoder);
 
     /*Later you should create group(s) with `lv_group_t * group = lv_group_create()`,
      *add objects to the group with `lv_group_add_obj(group, obj)`
@@ -189,6 +190,8 @@ static void encoder_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 
     data->enc_diff = encoder_diff;
     data->state = encoder_state;
+    if (data->enc_diff == 0 && data->state == 0) return;
+    // printf("data->enc_diff = %d data->state = %d\n", data->enc_diff, data->state);
 }
 
 /*Call this function in an interrupt to process encoder events (turn, press)*/

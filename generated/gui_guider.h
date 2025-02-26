@@ -27,6 +27,8 @@ extern "C" {
 
 extern const uint8_t in_channel_label[][8];
 extern const uint8_t out_channel_label[][8];
+extern lv_indev_t * indev_keypad;
+extern lv_indev_t * indev_encoder;
 
 typedef enum
 {
@@ -74,8 +76,9 @@ typedef struct
 	lv_obj_t *main_page_out_volume_unit_line[LAYOUT_OUTPUT_SIZE];
 	lv_obj_t *main_page_out_gain_limit[LAYOUT_OUTPUT_SIZE];
 
-	lv_obj_t *main_page_btn_test;
-	lv_obj_t *main_page_btn_test_label;
+	// lv_obj_t *main_page_btn_test;
+	// lv_obj_t *main_page_btn_test_label;
+	lv_group_t *main_page_group;
 	bool main_page_del;
 
 	lv_obj_t *standby_page;

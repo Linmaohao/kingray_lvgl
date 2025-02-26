@@ -165,6 +165,7 @@ void setup_scr_menu_page(lv_ui *ui)
 	//Create menu page group
 	ui->menu_page_group = lv_group_create();
 	lv_group_set_wrap(ui->menu_page_group, false);
+	lv_indev_set_group(indev_encoder, ui->menu_page_group);
 	//ui->menu_page_item_container = (lv_obj_t **)malloc(MENU_E_NUM * sizeof(lv_obj_t *));
 	//ui->menu_page_item_number = (lv_obj_t **)malloc(MENU_E_NUM * sizeof(lv_obj_t *));
 	//ui->menu_page_item_content = (lv_obj_t **)malloc(MENU_E_NUM * sizeof(lv_obj_t *));
@@ -224,7 +225,7 @@ void setup_scr_menu_page(lv_ui *ui)
 	lv_obj_set_style_bg_grad_dir(ui->menu_page_lock, LV_GRAD_DIR_NONE, LV_PART_INDICATOR|LV_STATE_CHECKED);
 	lv_obj_set_style_border_width(ui->menu_page_lock, 0, LV_PART_INDICATOR|LV_STATE_CHECKED);
 
-	lv_group_focus_obj(ui->menu_page_item_container[6]);
+	lv_group_focus_obj(ui->menu_page_item_container[0]);
 	events_init_menu_page(ui);
 
 	//Create menu page message box group
