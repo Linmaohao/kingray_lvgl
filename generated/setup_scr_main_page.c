@@ -105,7 +105,11 @@ void setup_scr_main_page(lv_ui *ui)
 
 	//Write codes main_page_device_name
 	ui->main_page_device_name = lv_label_create(ui->main_page);
-	lv_label_set_text(ui->main_page_device_name, "43Az");
+	// lv_label_set_text(ui->main_page_device_name, "43Az");
+
+	lv_obj_set_style_text_font(ui->main_page_device_name, &lv_front_source_fzltxh_20,  LV_PART_MAIN|LV_STATE_DEFAULT);
+	lv_label_set_text(ui->main_page_device_name, "嵌入式测试");
+
 	lv_label_set_long_mode(ui->main_page_device_name, LV_LABEL_LONG_WRAP);
 	lv_obj_set_pos(ui->main_page_device_name, MAIN_PAGE_DEV_NAME_X, MAIN_PAGE_DEV_NAME_Y);
 	lv_obj_set_size(ui->main_page_device_name, MAIN_PAGE_DEV_NAME_WIDTH, LABEL_HEIGHT);

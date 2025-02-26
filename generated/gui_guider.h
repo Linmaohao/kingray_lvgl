@@ -228,6 +228,7 @@ LV_FONT_DECLARE(lv_font_montserratMedium_12)
 LV_FONT_DECLARE(lv_font_montserratMedium_24)
 LV_FONT_DECLARE(lv_font_montserratMedium_22)
 LV_FONT_DECLARE(lv_font_montserratMedium_8)
+LV_FONT_DECLARE(lv_front_source_fzltxh_20)
 
 #ifdef __cplusplus
 }

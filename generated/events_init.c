@@ -21,6 +21,16 @@ typedef struct {
 	const uint8_t *some_string;
 } event_data_t;
 
+
+static void load_page_bar_load_event_handler (lv_event_t *e)
+{
+	lv_obj_t *target = lv_event_get_target(e);
+	lv_obj_draw_part_dsc_t * dsc = lv_event_get_param(e);
+	if(lv_area_get_width(dsc->draw_area) > lv_area_get_width(&(target->coords))) {
+		ui_load_scr_animation(&guider_ui, &guider_ui.main_page, guider_ui.main_page_del, &guider_ui.load_page_del, setup_scr_main_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, false, true);
+	}
+}
+
 static void main_page_btn_test_event_handler (lv_event_t *e)
 {
 	lv_event_code_t code = lv_event_get_code(e);
@@ -387,6 +397,11 @@ static void status_page_work_mode_event_handler(lv_event_t *e)
 	}
 }
 
+void events_init_load_page(lv_ui *ui)
+{
+	lv_obj_add_event_cb(ui->load_page_bar_load, load_page_bar_load_event_handler, LV_EVENT_DRAW_PART_END, NULL);
+}
+
 void events_init_main_page(lv_ui *ui)
 {
 	lv_obj_add_event_cb(ui->main_page_btn_test, main_page_btn_test_event_handler, LV_EVENT_ALL, NULL);
@@ -454,5 +469,5 @@ void events_init_status_page(lv_ui *ui)
 
 void events_init(lv_ui *ui)
 {
-
+	events_init_load_page(ui);
 }
