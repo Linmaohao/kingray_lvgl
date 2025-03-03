@@ -15,7 +15,23 @@
 #include "freemaster_client.h"
 #endif
 
-void events_init(lv_ui *ui)
+static void screen_page_backlight_time_event_handler (lv_event_t *e)
 {
-	events_init_load_page(ui);
+	lv_event_code_t code = lv_event_get_code(e);
+	lv_obj_t *obj = lv_event_get_target(e);
+	//printf("code = %d\n", code);
+	switch (code) {
+	case LV_EVENT_CLICKED:
+	{
+		lv_group_set_editing(guider_ui.screen_page_group, true);
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void events_init_screen_page(lv_ui *ui)
+{
+	lv_obj_add_event_cb(ui->screen_page_backlight_time, screen_page_backlight_time_event_handler, LV_EVENT_ALL, NULL);
 }

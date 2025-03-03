@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "./indev.h"
+#include <sys/time.h>
 
 #define GPIO_PATH "/sys/class/gpio/"
 
@@ -46,6 +47,23 @@ static bool encoder_confirm_pressed = false;            // 编码器确认键状
 static encoder_state_t encoder_state = ENCODER_IDLE;    // 初始状态为静止
 static unsigned short last_encoder_value = 0xFFFF;      // encoder上一次读取的值
 static unsigned short last_key_value = 0xFFFF;          // keypad上一次读取的值
+int gpio_74hc165_clk_fd = -1;                     // 保持打开状态，以免消耗太多时间
+int gpio_74hc165_qh_fd = -1;
+int gpio_74hc165_sh_fd = -1;
+
+unsigned long get_jiffies(void) {
+    struct timeval tv;
+    unsigned long jiffies = 0;
+    
+    if (gettimeofday(&tv, NULL) == -1) {
+        perror("Failed to get current time");
+        return 0; // 返回错误值或者其他适合的处理方式
+    } else {
+        jiffies = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    }
+    
+    return jiffies;
+}
 
 // 导出GPIO引脚，使其可用
 void gpio_export(int pin) {
@@ -86,66 +104,81 @@ void gpio_direction(int pin, const char *direction) {
     close(fd);
 }
 
-// 向GPIO引脚写入值（0 或 1）
-void gpio_write(int pin, int value) {
-    char path[64];
+void gpio_sh_write(int value) {
     char buffer[2];
-    int fd;
-
-    snprintf(path, sizeof(path), GPIO_PATH "gpio%d/value", pin);
-    fd = open(path, O_WRONLY);
-    if (fd == -1) {
-        perror("gpio/value");
-        return;
-    }
-
     snprintf(buffer, sizeof(buffer), "%d", value);
-    if (write(fd, buffer, sizeof(buffer)) == -1) {
-        perror("Error writing to value");
+    if (write(gpio_74hc165_sh_fd, buffer, sizeof(buffer)) == -1) {
+        perror("Error writing to sh value");
     }
-
-    close(fd);
 }
 
-// 从GPIO引脚读取值（返回 0 或 1）
-int gpio_read(int pin) {
-    char path[64];
+void gpio_clk_write(int value) {
+    char buffer[2];
+    snprintf(buffer, sizeof(buffer), "%d", value);
+    if (write(gpio_74hc165_clk_fd, buffer, sizeof(buffer)) == -1) {
+        perror("Error writing to clk value");
+    }
+}
+
+int gpio_qh_read() {
     char value_str[3];
-    int fd;
-
-    snprintf(path, sizeof(path), GPIO_PATH "gpio%d/value", pin);
-    fd = open(path, O_RDONLY);
-    if (fd == -1) {
-        perror("gpio/value");
-        return -1;
+    lseek(gpio_74hc165_qh_fd, 0, SEEK_SET);  // 重置文件指针
+    if (read(gpio_74hc165_qh_fd, value_str, 3) == -1) {
+        perror("Error reading qh value");
     }
-
-    if (read(fd, value_str, 3) == -1) {
-        perror("Error reading value");
-        close(fd);
-        return -1;
-    }
-
-    close(fd);
-
     return atoi(value_str);  // 转换为整数（0 或 1）
 }
 
+void open_74HC165_gpio(void) {
+    char path[64] = {0};
+    snprintf(path, sizeof(path), GPIO_PATH "gpio%d/value", PIN_74HC176_CLK);
+    gpio_74hc165_clk_fd = open(path, O_WRONLY);
+    if (gpio_74hc165_clk_fd == -1) {
+        perror("clk gpio open failed");
+        return;
+    }
+    memset(path, 0, sizeof(path));
+    snprintf(path, sizeof(path), GPIO_PATH "gpio%d/value", PIN_74HC176_QH);
+    gpio_74hc165_qh_fd = open(path, O_RDONLY);
+    if (gpio_74hc165_qh_fd == -1) {
+        perror("qh gpio open failed");
+        return;
+    }
+    memset(path, 0, sizeof(path));
+    snprintf(path, sizeof(path), GPIO_PATH "gpio%d/value", PIN_74HC176_SH);
+    gpio_74hc165_sh_fd = open(path, O_WRONLY);
+    if (gpio_74hc165_sh_fd == -1) {
+        perror("sh gpio open failed");
+        return;
+    }
+}
+
+void gpio_cleanup() {
+    if (gpio_74hc165_clk_fd != -1) close(gpio_74hc165_clk_fd);
+    if (gpio_74hc165_sh_fd != -1) close(gpio_74hc165_sh_fd);
+    if (gpio_74hc165_qh_fd != -1) close(gpio_74hc165_qh_fd);
+}
+
 unsigned short read_74HC165(void) {
+    open_74HC165_gpio();
+
     unsigned short value = 0;
 
-    gpio_write(PIN_74HC176_SH, 0);
-    usleep(10);
-    gpio_write(PIN_74HC176_SH, 1);
+    gpio_sh_write(0);
+    // usleep(10);  // 确保信号稳定
+    gpio_sh_write(1);
 
     for (int i = 0; i < 16; i++) {
-        gpio_write(PIN_74HC176_CLK, 0);         // 拉低时钟
-        usleep(10);                             // 确保时钟稳定
-        value <<= 1;                            // 左移以腾出空间
-        value |= gpio_read(PIN_74HC176_QH);     // 读取 Q7 的值
-        gpio_write(PIN_74HC176_CLK, 1);         // 拉高时钟
-        usleep(10);                             // 确保时钟稳定
+        gpio_clk_write(0);      // 拉低时钟
+        // usleep(10);          // 确保时钟稳定
+        value <<= 1;                   // 左移以腾出空间
+        value |= gpio_qh_read();       // 读取 QH 的值
+        gpio_clk_write(1);       // 拉高时钟
+        // usleep(10);           // 确保时钟稳定
     }
+
+    printf("Encoder data 0x%04X\n", value);
+    gpio_cleanup();
     return value;
 }
 
@@ -181,17 +214,17 @@ operate_status_t handle_encoder(unsigned short value) {
         case ENCODER_IDLE:
             if (!(value & ENCODER_RIGHT_BIT)) {
                 encoder_state = ENCODER_ROTATE_RIGHT;   // 检测到右旋起点，继续读
-//                ret = ENCODER_CONTINUE_ERAD;
+            //    ret = ENCODER_CONTINUE_ERAD;
             } else if (!(value & ENCODER_LEFT_BIT)) {
                 encoder_state = ENCODER_ROTATE_LEFT;    // 检测到左旋起点，继续读
-//                ret = ENCODER_CONTINUE_ERAD;
+            //    ret = ENCODER_CONTINUE_ERAD;
             }
             break;
 
         case ENCODER_ROTATE_RIGHT:
             if (!(value & ENCODER_PEAK_BIT)) {
                 encoder_state = ENCODER_ROTATE_RIGHT;   // 右旋中间过程，继续读
-//                ret = ENCODER_CONTINUE_ERAD;
+            //    ret = ENCODER_CONTINUE_ERAD;
             } else if (!(value & ENCODER_LEFT_BIT)) {
                 printf("Encoder turned right\n");
                 encoder_state = ENCODER_IDLE;           // 右旋完成，返回到静止状态
@@ -204,7 +237,7 @@ operate_status_t handle_encoder(unsigned short value) {
         case ENCODER_ROTATE_LEFT:
             if (!(value & ENCODER_PEAK_BIT)) {
                 encoder_state = ENCODER_ROTATE_LEFT;    // 左旋中间过程，继续读
-//                ret = ENCODER_CONTINUE_ERAD;
+            //    ret = ENCODER_CONTINUE_ERAD;
             } else if (!(value & ENCODER_RIGHT_BIT)) {
                 printf("Encoder turned left\n");
                 encoder_state = ENCODER_IDLE;           // 左旋完成，返回到静止状态

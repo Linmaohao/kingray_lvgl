@@ -16,6 +16,12 @@ extern "C" {
 
 #include "gui_guider.h"
 
+typedef struct {
+	int number;
+	float some_float;
+	const uint8_t *some_string;
+} event_data_t;
+
 void events_init(lv_ui *ui);
 
 void events_init_load_page(lv_ui *ui);

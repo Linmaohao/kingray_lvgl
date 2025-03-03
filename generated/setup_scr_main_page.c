@@ -367,7 +367,7 @@ void setup_scr_main_page(lv_ui *ui)
 
 	//Write codes main_page_group
 	ui->main_page_group = lv_group_create();
-    //lv_indev_set_group(indev_keypad, ui->main_page_group);
+    lv_indev_set_group(indev_keypad, ui->main_page_group);
     lv_indev_set_group(indev_encoder, ui->main_page_group);
 
 	lv_group_add_obj(ui->main_page_group, ui->main_page);

@@ -22,7 +22,7 @@ typedef enum{
     ENCODER_STATUS_ENTER = 0,
     ENCODER_STATUS_RIGHT,
     ENCODER_STATUS_LEFT,
-//    ENCODER_CONTINUE_ERAD,
+   ENCODER_CONTINUE_ERAD,
 
     KEY_STATUS_STANDBY,
     KEY_STATUS_MUTE_A,
@@ -40,6 +40,7 @@ typedef enum{
 operate_status_t indev_scan_key(void);
 operate_status_t indev_scan_encoder(void);
 void indev_init(void);
+unsigned long get_jiffies(void);
 
 /**********************
  *      MACROS

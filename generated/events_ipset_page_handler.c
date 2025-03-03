@@ -15,7 +15,30 @@
 #include "freemaster_client.h"
 #endif
 
-void events_init(lv_ui *ui)
+static void ipset_page_number_event_handler(lv_event_t *e)
 {
-	events_init_load_page(ui);
+	lv_event_code_t code = lv_event_get_code(e);
+	lv_obj_t *obj = lv_event_get_target(e);
+
+	switch (code) {
+	case LV_EVENT_CLICKED:
+	{
+		lv_group_set_editing(guider_ui.ipset_page_group, true);
+		lv_state_t state = lv_obj_get_state(obj);
+		printf("%x\n", state);
+		printf("code = %d\n", code);
+
+		break;
+	}
+	default:
+		break;
+	}
+}
+
+void events_init_ipset_page(lv_ui *ui)
+{
+	for (int i = 0; i < 4; i++){
+		lv_obj_add_event_cb(ui->ipset_page_ip[i], ipset_page_number_event_handler, LV_EVENT_ALL, NULL);
+		lv_obj_add_event_cb(ui->ipset_page_gw[i], ipset_page_number_event_handler, LV_EVENT_ALL, NULL);
+	}
 }

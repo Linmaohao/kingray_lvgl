@@ -14,8 +14,3 @@
 #if LV_USE_FREEMASTER
 #include "freemaster_client.h"
 #endif
-
-void events_init(lv_ui *ui)
-{
-	events_init_load_page(ui);
-}

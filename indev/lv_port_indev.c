@@ -4,6 +4,7 @@
  */
 
 /*Copy this file as "lv_port_indev.c" and set this value to "1" to enable content*/
+#include <sys/types.h>
 #if 1
 
 /*********************
@@ -12,6 +13,7 @@
 #include "lv_port_indev.h"
 #include "indev.h"
 #include "lvgl.h"
+#include <stdio.h>
 
 /*********************
  *      DEFINES
@@ -40,6 +42,7 @@ lv_indev_t * indev_encoder;
 
 static int32_t encoder_diff;
 static lv_indev_state_t encoder_state;
+// static u_int8_t continue_flag = 0;
 
 /**********************
  *      MACROS
@@ -168,8 +171,8 @@ static void encoder_init(void)
 /*Will be called by the library to read the encoder*/
 static void encoder_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 {
+    // printf("start now time = %lu\n", get_jiffies());
     operate_status_t encoder_act = indev_scan_encoder();
-//    data->continue_reading = false;
     encoder_state = LV_INDEV_STATE_REL;
     encoder_diff = 0;
     switch(encoder_act) {
@@ -179,17 +182,25 @@ static void encoder_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
             break;
         case ENCODER_STATUS_RIGHT:
             encoder_diff = 1;
+            // continue_flag = 0;
             break;
         case ENCODER_STATUS_LEFT:
             encoder_diff = -1;
+            // continue_flag = 0;
             break;
-//        case ENCODER_CONTINUE_ERAD:
-//            data->continue_reading = true;
-//            break;
+    //    case ENCODER_CONTINUE_ERAD:
+    //         continue_flag = 1;
+    //         break;
     }
+    // 每次进来都会置0，需要保存之前的状态，不好判断状态
+    // if (continue_flag == 1) {
+    //     printf("continue flag enable\n");
+    //     data->continue_reading = true;
+    // }
 
     data->enc_diff = encoder_diff;
     data->state = encoder_state;
+    // printf("end now time = %lu\n", get_jiffies());
     if (data->enc_diff == 0 && data->state == 0) return;
     // printf("data->enc_diff = %d data->state = %d\n", data->enc_diff, data->state);
 }
