@@ -37,6 +37,8 @@ void events_init_ipset_page(lv_ui *ui);
 void events_init_info_page(lv_ui *ui);
 void events_init_screen_page(lv_ui *ui);
 
+void CommonCallback(int key_value);
+
 #ifdef __cplusplus
 }
 #endif

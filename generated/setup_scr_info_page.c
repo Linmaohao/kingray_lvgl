@@ -100,7 +100,14 @@ void setup_scr_info_page(lv_ui *ui)
 	lv_obj_add_style(ui->info_page_hardware_version, info_style, LV_PART_MAIN);
 	lv_label_set_text(ui->info_page_hardware_version, "HW V:  43.66.32");
 
+	ui->info_page_group = lv_group_create();
+    lv_indev_set_group(indev_keypad, ui->info_page_group);
+    lv_indev_set_group(indev_encoder, NULL);
+
+	lv_group_add_obj(ui->info_page_group, ui->info_page);
+
 	//Update current screen layout.
 	lv_obj_update_layout(ui->info_page);
 
+	events_init_info_page(ui);
 }

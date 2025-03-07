@@ -166,6 +166,7 @@ void setup_scr_menu_page(lv_ui *ui)
 	ui->menu_page_group = lv_group_create();
 	lv_group_set_wrap(ui->menu_page_group, false);
 	lv_indev_set_group(indev_encoder, ui->menu_page_group);
+    lv_indev_set_group(indev_keypad, ui->menu_page_group);
 	//ui->menu_page_item_container = (lv_obj_t **)malloc(MENU_E_NUM * sizeof(lv_obj_t *));
 	//ui->menu_page_item_number = (lv_obj_t **)malloc(MENU_E_NUM * sizeof(lv_obj_t *));
 	//ui->menu_page_item_content = (lv_obj_t **)malloc(MENU_E_NUM * sizeof(lv_obj_t *));
@@ -229,8 +230,8 @@ void setup_scr_menu_page(lv_ui *ui)
 	events_init_menu_page(ui);
 
 	//Create menu page message box group
-	ui->menu_page_message_box = lv_group_create();
-	lv_group_set_wrap(ui->menu_page_message_box, false);
+	ui->menu_page_message_group = lv_group_create();
+	lv_group_set_wrap(ui->menu_page_message_group, false);
 
 	//Update current screen layout.
 	lv_obj_update_layout(ui->menu_page);

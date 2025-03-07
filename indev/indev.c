@@ -177,7 +177,7 @@ unsigned short read_74HC165(void) {
         // usleep(10);           // 确保时钟稳定
     }
 
-    printf("Encoder data 0x%04X\n", value);
+    // printf("Encoder data 0x%04X\n", value);
     gpio_cleanup();
     return value;
 }

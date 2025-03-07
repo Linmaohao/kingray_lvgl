@@ -371,7 +371,8 @@ void setup_scr_main_page(lv_ui *ui)
     lv_indev_set_group(indev_encoder, ui->main_page_group);
 
 	lv_group_add_obj(ui->main_page_group, ui->main_page);
-	lv_group_focus_obj(ui->main_page);
+	// focus 无效，点击第一次才会自动focus
+	// lv_group_focus_obj(ui->main_page);
 
 	// // 检查焦点状态
 	// if (lv_group_get_focused(ui->main_page_group) == ui->main_page) {

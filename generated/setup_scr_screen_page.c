@@ -141,9 +141,11 @@ void setup_scr_screen_page(lv_ui *ui)
 
 	//Group
 	ui->screen_page_group = lv_group_create();
+	lv_indev_set_group(indev_keypad, ui->screen_page_group);
+    lv_indev_set_group(indev_encoder, ui->screen_page_group);
 	lv_group_add_obj(ui->screen_page_group, ui->screen_page_backlight_switch);
 	lv_group_add_obj(ui->screen_page_group, ui->screen_page_backlight_time);
-	lv_group_focus_obj(ui->screen_page_backlight_time);
+	lv_group_focus_obj(ui->screen_page_backlight_switch);
 
 	events_init_screen_page(ui);
 

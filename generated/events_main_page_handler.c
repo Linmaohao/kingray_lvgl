@@ -9,6 +9,7 @@
 
 #include "events_init.h"
 #include <stdio.h>
+#include "../indev/lv_port_indev.h"
 #include "lvgl.h"
 
 #if LV_USE_FREEMASTER
@@ -44,7 +45,7 @@ static void main_page_event_handler (lv_event_t *e)
 {
 	lv_event_code_t code = lv_event_get_code(e);
 	if (code < LV_EVENT_COVER_CHECK || code > LV_EVENT_DRAW_PART_END) {
-		printf("code = %d\n", code);
+		printf("main code = %d\n", code);
 	}
 
 	switch (code) {
@@ -52,14 +53,23 @@ static void main_page_event_handler (lv_event_t *e)
 	case LV_EVENT_FOCUSED:
 	{
 		// ui_load_scr_animation(&guider_ui, &guider_ui.standby_page, guider_ui.standby_page_del, &guider_ui.main_page_del, setup_scr_standby_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
-		ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.main_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
+		ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.main_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 		break;
 	}
 	case LV_EVENT_KEY:
 	{
-		int a = lv_indev_get_act();
-		int b = lv_indev_get_key(lv_indev_get_act());
-		printf("a = %d b = %d\n", a, b);
+		// 获取当前按键indev的动作
+		int key_value = lv_indev_get_key(lv_indev_get_act());
+		printf("key_value = %d\n", key_value);
+		if (key_value == LV_KEY_ESC)
+		{
+
+		}
+    	// 其他按键处理
+		else
+		{
+		  CommonCallback(key_value);
+		}
 	}
 	default:
 		break;

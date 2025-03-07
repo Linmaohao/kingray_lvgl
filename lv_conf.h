@@ -699,6 +699,10 @@
 # define LV_DEMO_MUSIC_AUTO_PLAY    0
 #endif
 
+// #define LV_USE_DRAW_BUFFER 1      // 启用双缓冲
+// #define LV_IMG_CACHE_DEF_SIZE 32  // 图片缓存大小
+// #define LV_FONT_FMT_TXT_LARGE 1   // 支持大字体
+
 /*--END OF LV_CONF_H--*/
 
 #endif /*LV_CONF_H*/

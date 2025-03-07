@@ -83,6 +83,7 @@ typedef struct
 
 	lv_obj_t *standby_page;
 	lv_obj_t *standby_page_img_standby;
+	lv_group_t *standby_page_group;
 	bool standby_page_del;
 
 	lv_obj_t *menu_page;
@@ -163,6 +164,7 @@ typedef struct
 	lv_obj_t *info_page_factory_topic;
 	lv_obj_t *info_page_software_version;
 	lv_obj_t *info_page_hardware_version;
+	lv_group_t *info_page_group;
 	bool info_page_del;
 
 	lv_obj_t *screen_page;

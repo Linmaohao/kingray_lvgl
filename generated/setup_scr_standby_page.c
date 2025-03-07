@@ -34,7 +34,14 @@ void setup_scr_standby_page(lv_ui *ui)
 	lv_img_set_src(ui->standby_page_img_standby, &sleep_mode);
 	lv_obj_set_size(ui->standby_page_img_standby, LV_HOR_RES_MAX, LV_VER_RES_MAX);
 
+	ui->standby_page_group = lv_group_create();
+    lv_indev_set_group(indev_keypad, ui->standby_page_group);
+    lv_indev_set_group(indev_encoder, ui->standby_page_group);
+
+	lv_group_add_obj(ui->standby_page_group, ui->standby_page);
+
 	//Update current screen layout.
 	lv_obj_update_layout(ui->standby_page);
 
+	events_init_standby_page(ui);
 }
