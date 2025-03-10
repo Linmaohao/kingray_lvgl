@@ -19,13 +19,28 @@ static void volume_page_mute_event_handler(lv_event_t *e)
 {
 	lv_event_code_t code = lv_event_get_code(e);
 	lv_obj_t *obj = lv_event_get_target(e);
-	lv_state_t state = lv_obj_get_state(obj);
+	//lv_state_t state = lv_obj_get_state(obj);
+	event_data_t *data = (event_data_t *)lv_event_get_user_data(e);
 	switch (code) {
 	case LV_EVENT_CLICKED:
 	{
-		printf("status = %x\n", state);
-		printf("code = %d\n", code);
+		printf("mute number = %d\n", data->number);
 		break;
+	}
+	case LV_EVENT_KEY:
+	{
+		// 获取当前按键indev的动作
+		int key_value = lv_indev_get_key(lv_indev_get_act());
+		printf("key_value = %d\n", key_value);
+		if (key_value == LV_KEY_ESC)
+		{
+			ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.volume_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+		}
+		// 其他按键处理
+		else
+		{
+			CommonCallback(key_value);
+		}
 	}
 	default:
 		break;
@@ -36,25 +51,42 @@ static void volume_page_gain_event_handler(lv_event_t *e)
 {
 	lv_event_code_t code = lv_event_get_code(e);
 	lv_obj_t *obj = lv_event_get_target(e);
+	// 获取当前状态
 	lv_state_t state = lv_obj_get_state(obj);
+	event_data_t *data = (event_data_t *)lv_event_get_user_data(e);
+
 	switch (code) {
-	case LV_EVENT_CLICKED:
-	{
-		lv_group_set_editing(guider_ui.volume_page_group, true);
-		break;
-	}
-	case LV_EVENT_VALUE_CHANGED:
-	{
-		uint8_t str[10];
-		event_data_t *data = (event_data_t *)lv_event_get_user_data(e);
-		float value = lv_slider_get_value(obj) / 10.0f;
-    	snprintf(str, sizeof(str), "%.1f", value);
-		printf("%d\n", data->number);
-    	lv_label_set_text(guider_ui.volume_page_gain_label[data->number], str);
-		break;
-	}
-	default:
-		break;
+		case LV_EVENT_VALUE_CHANGED:
+		{
+			uint8_t str[10];
+			float value = lv_slider_get_value(obj) / 10.0f;
+			snprintf(str, sizeof(str), "%.1f", value);
+			printf("%d\n", data->number);
+			lv_label_set_text(guider_ui.volume_page_gain_label[data->number], str);
+			break;
+		}
+		case LV_EVENT_KEY:
+		{
+			// 获取当前按键indev的动作
+			int key_value = lv_indev_get_key(lv_indev_get_act());
+			printf("key_value = %d\n", key_value);
+			if (key_value == LV_KEY_ESC)
+			{
+				// printf("state = %4x", state);
+				if (state & LV_STATE_EDITED) {
+					lv_group_focus_obj(obj);
+				} else {
+					ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.volume_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				}
+			}
+			// 其他按键处理
+			else
+			{
+				CommonCallback(key_value);
+			}
+		}
+		default:
+			break;
 	}
 }
 

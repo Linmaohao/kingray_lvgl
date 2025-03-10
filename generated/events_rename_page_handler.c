@@ -21,23 +21,48 @@ static void rename_page_name_event_handler(lv_event_t *e)
 	lv_obj_t *obj = lv_event_get_target(e);
 
 	switch (code) {
-	case LV_EVENT_CLICKED:
-	{
-		lv_group_set_editing(guider_ui.rename_page_group, true);
-		lv_state_t state = lv_obj_get_state(obj);
-		printf("%x\n", state);
-		printf("code = %d\n", code);
+		case LV_EVENT_CLICKED:
+		{
+			// 编写代码保存当前值
+			char buf[2] = {0};
+			event_data_t *data = (event_data_t *)lv_event_get_user_data(e);
 
-		break;
-	}
-	default:
-		break;
+			lv_roller_get_selected_str(obj, buf, 1);
+			printf("this work [%d] is = %c\n", data->number, buf[0]);
+			break;
+		}
+		case LV_EVENT_KEY:
+		{
+			// 获取当前按键indev的动作
+			int key_value = lv_indev_get_key(lv_indev_get_act());
+			printf("key_value = %d\n", key_value);
+			if (key_value == LV_KEY_ESC)
+			{
+				// 判断是否处于编辑状态
+				int is_editing = lv_obj_has_state(obj, LV_STATE_EDITED);
+				if (is_editing) {
+					// 重新聚焦
+					lv_group_focus_obj(obj);
+				} else {
+					ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.rename_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				}
+			}
+			// 其他按键处理
+			else
+			{
+				CommonCallback(key_value);
+			}
+		}
+		default:
+			break;
 	}
 }
 
 void events_init_rename_page(lv_ui *ui)
 {
 	for (int i = 0; i < RENAME_DISPLAY_NAME_LEN; i++){
-		lv_obj_add_event_cb(ui->rename_page_name[i], rename_page_name_event_handler, LV_EVENT_ALL, NULL);
+		event_data_t *event_data = (event_data_t *)malloc(sizeof(event_data_t));
+		event_data->number = i;
+		lv_obj_add_event_cb(ui->rename_page_name[i], rename_page_name_event_handler, LV_EVENT_ALL, event_data);
 	}
 }

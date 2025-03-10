@@ -41,6 +41,7 @@ uint8_t name_record[8] = {'4', '3', 'H', 'H', ' ', ' ', ' ', ' '};
 
 void setup_scr_rename_page(lv_ui *ui)
 {
+	printf("============ \n");
 	//Write codes rename_page
 	ui->rename_page = lv_obj_create(NULL);
 	lv_obj_set_size(ui->rename_page, LV_HOR_RES_MAX, LV_VER_RES_MAX);
@@ -107,6 +108,8 @@ void setup_scr_rename_page(lv_ui *ui)
 		lv_group_add_obj(ui->rename_page_group, ui->rename_page_name[i]);
 	}
 
+	lv_indev_set_group(indev_keypad, ui->rename_page_group);
+    lv_indev_set_group(indev_encoder, ui->rename_page_group);
 	lv_group_focus_obj(ui->rename_page_name[0]);
 
 	events_init_rename_page(ui);

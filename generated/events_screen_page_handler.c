@@ -41,7 +41,10 @@ static void screen_page_backlight_time_event_handler (lv_event_t *e)
 			int is_editing = lv_obj_has_state(guider_ui.screen_page_backlight_time, LV_STATE_EDITED);
 			if (is_editing) {
 				printf("Roller is in EDIT mode.\n");
-				lv_obj_clear_state(guider_ui.screen_page_backlight_time, LV_STATE_EDITED);
+				// lv_obj_clear_state(guider_ui.screen_page_backlight_time, LV_STATE_EDITED);
+				// lv_obj_clear_flag(guider_ui.screen_page_backlight_time, LV_OBJ_FLAG_SCROLLABLE);
+				// 重新聚焦
+				lv_group_focus_obj(guider_ui.screen_page_backlight_time);
 			} else {
 				ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.info_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 				printf("Roller is in NORMAL mode.\n");
@@ -92,18 +95,6 @@ static void screen_page_backlight_switch_event_handler (lv_event_t *e)
 	default:
 		break;
 	}
-	// lv_event_code_t code = lv_event_get_code(e);
-	// lv_obj_t *obj = lv_event_get_target(e);
-	// //printf("code = %d\n", code);
-	// switch (code) {
-	// case LV_EVENT_CLICKED:
-	// {
-	// 	lv_group_set_editing(guider_ui.screen_page_group, true);
-	// 	break;
-	// }
-	// default:
-	// 	break;
-	// }
 }
 
 void events_init_screen_page(lv_ui *ui)

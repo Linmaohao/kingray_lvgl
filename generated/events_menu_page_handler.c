@@ -29,22 +29,22 @@ static void menu_page_item_event_handler (lv_event_t *e)
 		event_data_t *data = (event_data_t *)lv_event_get_user_data(e);
 		switch(data->number) {
 			case MENU_E_VOLUME:
-				ui_load_scr_animation(&guider_ui, &guider_ui.volume_page, guider_ui.volume_page_del, &guider_ui.main_page_del, setup_scr_volume_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				ui_load_scr_animation(&guider_ui, &guider_ui.volume_page, guider_ui.volume_page_del, &guider_ui.menu_page_del, setup_scr_volume_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 				break;
 			case MENU_E_PRESET:
-				ui_load_scr_animation(&guider_ui, &guider_ui.preset_page, guider_ui.preset_page_del, &guider_ui.main_page_del, setup_scr_preset_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				ui_load_scr_animation(&guider_ui, &guider_ui.preset_page, guider_ui.preset_page_del, &guider_ui.menu_page_del, setup_scr_preset_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 				break;
 			case MENU_E_SOURCE:
-				ui_load_scr_animation(&guider_ui, &guider_ui.source_page, guider_ui.source_page_del, &guider_ui.main_page_del, setup_scr_source_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				ui_load_scr_animation(&guider_ui, &guider_ui.source_page, guider_ui.source_page_del, &guider_ui.menu_page_del, setup_scr_source_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 				break;
 			case MENU_E_STATUS:
-				ui_load_scr_animation(&guider_ui, &guider_ui.status_page, guider_ui.status_page_del, &guider_ui.main_page_del, setup_scr_status_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				ui_load_scr_animation(&guider_ui, &guider_ui.status_page, guider_ui.status_page_del, &guider_ui.menu_page_del, setup_scr_status_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 				break;
 			case MENU_E_RENAME:
-				ui_load_scr_animation(&guider_ui, &guider_ui.rename_page, guider_ui.rename_page_del, &guider_ui.main_page_del, setup_scr_rename_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				ui_load_scr_animation(&guider_ui, &guider_ui.rename_page, guider_ui.rename_page_del, &guider_ui.menu_page_del, setup_scr_rename_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 				break;
 			case MENU_E_IPSET:
-				ui_load_scr_animation(&guider_ui, &guider_ui.ipset_page, guider_ui.ipset_page_del, &guider_ui.main_page_del, setup_scr_ipset_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				ui_load_scr_animation(&guider_ui, &guider_ui.ipset_page, guider_ui.ipset_page_del, &guider_ui.menu_page_del, setup_scr_ipset_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 				break;
 			case MENU_E_LOCK:
 				if (lv_obj_has_state(guider_ui.menu_page_lock, LV_STATE_CHECKED)) {
@@ -54,10 +54,10 @@ static void menu_page_item_event_handler (lv_event_t *e)
 				}
 				break;
 			case MENU_E_INFO:
-				ui_load_scr_animation(&guider_ui, &guider_ui.info_page, guider_ui.info_page_del, &guider_ui.main_page_del, setup_scr_info_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				ui_load_scr_animation(&guider_ui, &guider_ui.info_page, guider_ui.info_page_del, &guider_ui.menu_page_del, setup_scr_info_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 				break;
 			case MENU_E_SCREEN:
-				ui_load_scr_animation(&guider_ui, &guider_ui.screen_page, guider_ui.screen_page_del, &guider_ui.main_page_del, setup_scr_screen_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+				ui_load_scr_animation(&guider_ui, &guider_ui.screen_page, guider_ui.screen_page_del, &guider_ui.menu_page_del, setup_scr_screen_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 				break;
 			default:
 				break;
@@ -71,7 +71,7 @@ static void menu_page_item_event_handler (lv_event_t *e)
 		printf("key_value = %d\n", key_value);
 		if (key_value == LV_KEY_ESC)
 		{
-			ui_load_scr_animation(&guider_ui, &guider_ui.main_page, guider_ui.main_page_del, &guider_ui.load_page_del, setup_scr_main_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, false, true);
+			ui_load_scr_animation(&guider_ui, &guider_ui.main_page, guider_ui.main_page_del, &guider_ui.menu_page_del, setup_scr_main_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, false, true);
 		}
     	// 其他按键处理
 		else

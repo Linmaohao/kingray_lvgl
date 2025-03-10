@@ -142,8 +142,6 @@ void setup_scr_ipset_page(lv_ui *ui)
 		//Write style for rename_page_name, Part: LV_PART_SELECTED, State: LV_STATE_FOCUSED|LV_STATE_EDITED.
 		lv_obj_set_style_bg_color(ui->ipset_page_ip[i], lv_palette_main(LV_PALETTE_GREEN), LV_PART_SELECTED|(LV_STATE_FOCUSED|LV_STATE_EDITED));
 		lv_obj_set_style_outline_opa(ui->ipset_page_ip[i], LV_OPA_TRANSP, LV_STATE_FOCUSED|LV_STATE_EDITED);
-		
-		lv_group_add_obj(ui->ipset_page_group, ui->ipset_page_ip[i]);
 
 		//Write codes ipset_page_gw
 		ui->ipset_page_gw[i] = lv_roller_create(ui->ipset_page);
@@ -167,8 +165,6 @@ void setup_scr_ipset_page(lv_ui *ui)
 		//Write style for rename_page_name, Part: LV_PART_SELECTED, State: LV_STATE_FOCUSED|LV_STATE_EDITED.
 		lv_obj_set_style_bg_color(ui->ipset_page_gw[i], lv_palette_main(LV_PALETTE_GREEN), LV_PART_SELECTED|(LV_STATE_FOCUSED|LV_STATE_EDITED));
 		lv_obj_set_style_outline_opa(ui->ipset_page_gw[i], LV_OPA_TRANSP, LV_STATE_FOCUSED|LV_STATE_EDITED);
-
-		lv_group_add_obj(ui->ipset_page_group, ui->ipset_page_gw[i]);
     }
 
 	//Write style for ipset_page_mac, Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
@@ -211,7 +207,16 @@ void setup_scr_ipset_page(lv_ui *ui)
 
 	lv_group_add_obj(ui->ipset_page_group, ui->ipset_page_ensure_btn);
 
-	lv_group_focus_obj(ui->ipset_page_ensure_btn);
+	for (int i = 0; i < 4; i++) {
+		lv_group_add_obj(ui->ipset_page_group, ui->ipset_page_ip[i]);
+	}
+	for (int i = 0; i < 4; i++) {
+		lv_group_add_obj(ui->ipset_page_group, ui->ipset_page_gw[i]);
+	}
+
+	lv_indev_set_group(indev_keypad, ui->ipset_page_group);
+    lv_indev_set_group(indev_encoder, ui->ipset_page_group);
+	lv_group_focus_obj(ui->ipset_page_ip[0]);
 
 	events_init_ipset_page(ui);
 

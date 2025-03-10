@@ -113,7 +113,10 @@ typedef struct
 	lv_obj_t *preset_page_title;
 	lv_obj_t *preset_page_list_page;
 	lv_obj_t **preset_page_preset;
+	lv_obj_t **preset_page_preset_text;
+	lv_obj_t *preset_page_message_box;
 	lv_group_t *preset_page_group;
+	lv_group_t *preset_page_message_group;
 	bool preset_page_del;
 
 	lv_obj_t *source_page;

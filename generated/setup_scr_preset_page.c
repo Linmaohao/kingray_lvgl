@@ -69,18 +69,70 @@ void setup_scr_preset_page(lv_ui *ui)
 	lv_obj_set_style_radius(ui->preset_page_list_page, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 	lv_obj_set_style_border_width(ui->preset_page_list_page, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
+	//Init a new style for item container.
+	lv_style_t *item_container_style = (lv_style_t *)malloc(sizeof(lv_style_t));
+    lv_style_init(item_container_style);
+	lv_style_set_border_width(item_container_style, 1);
+	lv_style_set_border_color(item_container_style, lv_color_white());
+	lv_style_set_radius(item_container_style, 2);
+	lv_style_set_bg_opa(item_container_style, LV_OPA_TRANSP);
+	lv_style_set_pad_top(item_container_style, 2);
+
+	lv_style_t *item_container_focused_style = (lv_style_t *)malloc(sizeof(lv_style_t));
+	lv_style_init(item_container_focused_style);
+	lv_style_set_border_width(item_container_focused_style, 2);
+	lv_style_set_bg_color(item_container_focused_style, MAIN_FONT_COLOR);
+	lv_style_set_border_color(item_container_focused_style, lv_palette_lighten(LV_PALETTE_ORANGE, 1));
+	lv_style_set_bg_opa(item_container_focused_style, LV_OPA_COVER);
+
 	//Write codes preset_page_group
 	ui->preset_page_group = lv_group_create();
 
 	ui->preset_page_preset = (lv_obj_t **)malloc(item_number * sizeof(lv_obj_t *));
+	ui->preset_page_preset_text = (lv_obj_t **)malloc(item_number * sizeof(lv_obj_t *));
 	for (int i = 0; i < item_number; i++)
 	{
-		ui->preset_page_preset[i] = lv_label_create(ui->preset_page_list_page);
-		lv_label_set_long_mode(ui->preset_page_preset[i], LV_LABEL_LONG_SCROLL);
-		lv_label_set_recolor(ui->preset_page_preset[i], true);
-		lv_obj_set_pos(ui->preset_page_preset[i], PRESET_ITEM_X, PRESET_ITEM_Y + PRESET_ITEM_Y_SPAN * i);
+		// ui->preset_page_preset[i] = lv_label_create(ui->preset_page_list_page);
+		// lv_label_set_long_mode(ui->preset_page_preset[i], LV_LABEL_LONG_SCROLL);
+		// lv_label_set_recolor(ui->preset_page_preset[i], true);
+		// lv_obj_set_pos(ui->preset_page_preset[i], PRESET_ITEM_X, PRESET_ITEM_Y + PRESET_ITEM_Y_SPAN * i);
+		// lv_obj_set_size(ui->preset_page_preset[i], PRESET_ITEM_WIDTH, PRESET_ITEM_HEIGHT);
+		// lv_label_set_text(ui->preset_page_preset[i], preset_name[i]);
+
+		// //Write style for preset_page_preset[i], Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
+		// lv_obj_set_style_text_align(ui->preset_page_preset[i], LV_TEXT_ALIGN_LEFT, LV_PART_MAIN|LV_STATE_DEFAULT);
+		// lv_obj_set_style_text_font(ui->preset_page_preset[i], &lv_font_montserratMedium_20, LV_PART_MAIN|LV_STATE_DEFAULT);
+		// lv_obj_set_style_text_color(ui->preset_page_preset[i], MAIN_FONT_COLOR, LV_PART_MAIN|LV_STATE_DEFAULT);
+		// lv_obj_set_style_radius(ui->preset_page_preset[i], 2, LV_PART_MAIN|LV_STATE_DEFAULT);
+		// lv_obj_set_style_border_width(ui->preset_page_preset[i], 1, LV_PART_MAIN|LV_STATE_DEFAULT);
+		// lv_obj_set_style_border_color(ui->preset_page_preset[i], lv_color_white(), LV_PART_MAIN|LV_STATE_DEFAULT);
+		// lv_obj_set_style_border_opa(ui->preset_page_preset[i], LV_OPA_COVER, LV_PART_MAIN|LV_STATE_DEFAULT);
+
+		// lv_obj_set_style_pad_top(ui->preset_page_preset[i], 4, LV_PART_MAIN|LV_STATE_DEFAULT);
+		// lv_obj_set_style_pad_left(ui->preset_page_preset[i], 20, LV_PART_MAIN|LV_STATE_DEFAULT);
+
+		// //Write style for preset_page_preset[i], Part: LV_PART_MAIN, State: LV_STATE_FOCUSED.
+		// lv_obj_set_style_border_width(ui->preset_page_preset[i], 3, LV_PART_MAIN|LV_STATE_FOCUSED);
+		// lv_obj_set_style_border_color(ui->preset_page_preset[i], lv_palette_lighten(LV_PALETTE_ORANGE, 1), LV_PART_MAIN|LV_STATE_FOCUSED);
+		// lv_obj_set_style_border_opa(ui->preset_page_preset[i], LV_OPA_COVER, LV_PART_MAIN|LV_STATE_FOCUSED);
+		// lv_obj_set_style_bg_color(ui->preset_page_preset[i], MAIN_FONT_COLOR, LV_PART_MAIN|LV_STATE_FOCUSED);
+		// lv_obj_set_style_text_color(ui->preset_page_preset[i], lv_palette_main(LV_PALETTE_GREEN), LV_PART_MAIN|LV_STATE_FOCUSED);
+
+		ui->preset_page_preset[i] = lv_btn_create(ui->preset_page_list_page);
 		lv_obj_set_size(ui->preset_page_preset[i], PRESET_ITEM_WIDTH, PRESET_ITEM_HEIGHT);
-		lv_label_set_text(ui->preset_page_preset[i], preset_name[i]);
+		lv_obj_set_pos(ui->preset_page_preset[i], PRESET_ITEM_X, PRESET_ITEM_Y + PRESET_ITEM_Y_SPAN * i);
+		lv_obj_set_style_pad_all(ui->preset_page_preset[i], 0, 0);
+
+		lv_obj_add_style(ui->preset_page_preset[i], item_container_style, LV_PART_MAIN);
+		lv_obj_add_style(ui->preset_page_preset[i], item_container_focused_style, LV_STATE_FOCUSED);
+    	lv_obj_set_scrollbar_mode(ui->preset_page_preset[i], LV_SCROLLBAR_MODE_OFF);
+		lv_obj_set_style_shadow_width(ui->preset_page_preset[i], 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+
+
+		ui->preset_page_preset_text[i] = lv_label_create(ui->preset_page_preset[i]);  				// 在按钮上创建一个标签
+		lv_label_set_long_mode(ui->preset_page_preset_text[i], LV_LABEL_LONG_SCROLL);
+		lv_label_set_recolor(ui->preset_page_preset_text[i], true);
+		lv_label_set_text(ui->preset_page_preset_text[i], preset_name[i]);
 
 		//Write style for preset_page_preset[i], Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
 		lv_obj_set_style_text_align(ui->preset_page_preset[i], LV_TEXT_ALIGN_LEFT, LV_PART_MAIN|LV_STATE_DEFAULT);
@@ -104,7 +156,15 @@ void setup_scr_preset_page(lv_ui *ui)
 		lv_group_add_obj(ui->preset_page_group, ui->preset_page_preset[i]);
 	}
 
+	lv_indev_set_group(indev_keypad, ui->preset_page_group);
+    lv_indev_set_group(indev_encoder, ui->preset_page_group);
 	lv_group_focus_obj(ui->preset_page_preset[0]);
+
+	//Create preset page message box group
+	ui->preset_page_message_group = lv_group_create();
+	lv_group_set_wrap(ui->preset_page_message_group, false);
+
+	events_init_preset_page(ui);
 
 	//Update current screen layout.
 	lv_obj_update_layout(ui->preset_page);

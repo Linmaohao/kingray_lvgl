@@ -164,7 +164,9 @@ void setup_scr_volume_page(lv_ui *ui)
 		lv_group_add_obj(ui->volume_page_group, ui->volume_page_gain[i]);
 	}
 
-	lv_group_focus_obj(ui->volume_page_gain[0]);
+	lv_indev_set_group(indev_keypad, ui->volume_page_group);
+    lv_indev_set_group(indev_encoder, ui->volume_page_group);
+	lv_group_focus_obj(ui->volume_page_mute_btn[0]);
 	events_init_volume_page(ui);
 
 	//Update current screen layout.
