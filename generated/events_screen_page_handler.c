@@ -55,6 +55,7 @@ static void screen_page_backlight_time_event_handler (lv_event_t *e)
 		{
 			CommonCallback(key_value);
 		}
+		break;
 	}
 	default:
 		break;
@@ -91,6 +92,7 @@ static void screen_page_backlight_switch_event_handler (lv_event_t *e)
 		{
 			CommonCallback(key_value);
 		}
+		break;
 	}
 	default:
 		break;

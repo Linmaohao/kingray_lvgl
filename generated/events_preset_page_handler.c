@@ -9,11 +9,15 @@
 
 #include "events_init.h"
 #include <stdio.h>
+#include <sys/types.h>
 #include "lvgl.h"
 
 #if LV_USE_FREEMASTER
 #include "freemaster_client.h"
 #endif
+
+// 用作malloc的free标记，防止重复释放（有这种现象），目前只有80个预设
+static u_int8_t preset_free_glag[80] = {0};
 
 static void preset_page_message_event_handler(lv_event_t *e)
 {
@@ -26,6 +30,7 @@ static void preset_page_message_event_handler(lv_event_t *e)
 	switch (code) {
 		case LV_EVENT_VALUE_CHANGED:
 		{
+			break;
 		}
 		case LV_EVENT_CLICKED:
 		{
@@ -50,6 +55,7 @@ static void preset_page_message_event_handler(lv_event_t *e)
 			default:
 				break;
 			}
+			break;
 		}
 		case LV_EVENT_FOCUSED:
 		{
@@ -153,6 +159,18 @@ static void preset_page_item_event_handler(lv_event_t *e)
 		{
 			CommonCallback(key_value);
 		}
+		break;
+	}
+	case LV_EVENT_DELETE:
+	{
+		if (data->number >= 0 && data->number < 80 && !preset_free_glag[data->number])
+		{
+			preset_free_glag[data->number] = 1;
+			// printf("!!!!!!!!!!!!!!!!!!!!! delete number = %d\n", data->number);
+			free(data);
+			data = NULL;
+		}
+		break;
 	}
 	default:
 		break;
@@ -166,6 +184,7 @@ void events_init_preset_page(lv_ui *ui)
 	for (int i = 0; i < preset_num; i++) {
 		event_data_t *event_data = (event_data_t *)malloc(sizeof(event_data_t));
 		event_data->number = i;
+		preset_free_glag[i] = 0;
 		lv_obj_add_event_cb(ui->preset_page_preset[i], preset_page_item_event_handler, LV_EVENT_ALL, event_data);
 	}
 }

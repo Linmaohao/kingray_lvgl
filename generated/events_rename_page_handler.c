@@ -9,23 +9,27 @@
 
 #include "events_init.h"
 #include <stdio.h>
+#include <sys/types.h>
 #include "lvgl.h"
 
 #if LV_USE_FREEMASTER
 #include "freemaster_client.h"
 #endif
 
+// 用作malloc的free标记，防止重复释放（有这种现象）
+static u_int8_t name_free_glag[RENAME_DISPLAY_NAME_LEN] = {0};
+
 static void rename_page_name_event_handler(lv_event_t *e)
 {
 	lv_event_code_t code = lv_event_get_code(e);
 	lv_obj_t *obj = lv_event_get_target(e);
+	event_data_t *data = (event_data_t *)lv_event_get_user_data(e);
 
 	switch (code) {
 		case LV_EVENT_CLICKED:
 		{
 			// 编写代码保存当前值
 			char buf[2] = {0};
-			event_data_t *data = (event_data_t *)lv_event_get_user_data(e);
 
 			lv_roller_get_selected_str(obj, buf, 1);
 			printf("this work [%d] is = %c\n", data->number, buf[0]);
@@ -52,6 +56,18 @@ static void rename_page_name_event_handler(lv_event_t *e)
 			{
 				CommonCallback(key_value);
 			}
+			break;
+		}
+		case LV_EVENT_DELETE:
+		{
+			if (data->number >= 0 && data->number < RENAME_DISPLAY_NAME_LEN && !name_free_glag[data->number])
+			{
+				name_free_glag[data->number] = 1;
+				// printf("!!!!!!!!!!!!!!!!!!!!! delete number = %d\n", data->number);
+				free(data);
+				data = NULL;
+			}
+			break;
 		}
 		default:
 			break;
@@ -63,6 +79,7 @@ void events_init_rename_page(lv_ui *ui)
 	for (int i = 0; i < RENAME_DISPLAY_NAME_LEN; i++){
 		event_data_t *event_data = (event_data_t *)malloc(sizeof(event_data_t));
 		event_data->number = i;
+		name_free_glag[i] = 0;
 		lv_obj_add_event_cb(ui->rename_page_name[i], rename_page_name_event_handler, LV_EVENT_ALL, event_data);
 	}
 }

@@ -9,11 +9,16 @@
 
 #include "events_init.h"
 #include <stdio.h>
+#include <sys/types.h>
 #include "lvgl.h"
 
 #if LV_USE_FREEMASTER
 #include "freemaster_client.h"
 #endif
+
+// 用作malloc的free标记，防止重复释放（有这种现象）
+static u_int8_t mute_free_glag[LAYOUT_TOTAL_CHN_SIZE] = {0};
+static u_int8_t gain_free_glag[LAYOUT_TOTAL_CHN_SIZE] = {0};
 
 static void volume_page_mute_event_handler(lv_event_t *e)
 {
@@ -41,6 +46,18 @@ static void volume_page_mute_event_handler(lv_event_t *e)
 		{
 			CommonCallback(key_value);
 		}
+		break;
+	}
+	case LV_EVENT_DELETE:
+	{
+		if (data->number >= 0 && data->number < LAYOUT_TOTAL_CHN_SIZE && !mute_free_glag[data->number])
+		{
+			mute_free_glag[data->number] = 1;
+			// printf("!!!!!!!!!!!!!!!!!!!!! delete number = %d\n", data->number);
+			free(data);
+			data = NULL;
+		}
+		break;
 	}
 	default:
 		break;
@@ -84,6 +101,18 @@ static void volume_page_gain_event_handler(lv_event_t *e)
 			{
 				CommonCallback(key_value);
 			}
+			break;
+		}
+		case LV_EVENT_DELETE:
+		{
+			if (data->number >= 0 && data->number < LAYOUT_TOTAL_CHN_SIZE && !gain_free_glag[data->number])
+			{
+				gain_free_glag[data->number] = 1;
+				// printf("!!!!!!!!!!!!!!!!!!!!! delete number = %d\n", data->number);
+				free(data);
+				data = NULL;
+			}
+			break;
 		}
 		default:
 			break;
@@ -95,6 +124,8 @@ void events_init_volume_page(lv_ui *ui)
 	for (int i = 0; i < LAYOUT_TOTAL_CHN_SIZE; i++){
 		event_data_t *event_data = (event_data_t *)malloc(sizeof(event_data_t));
 		event_data->number = i;
+		mute_free_glag[i] = 0;
+		gain_free_glag[i] = 0;
 		lv_obj_add_event_cb(ui->volume_page_mute_btn[i], volume_page_mute_event_handler, LV_EVENT_ALL, event_data);
 		lv_obj_add_event_cb(ui->volume_page_gain[i], volume_page_gain_event_handler, LV_EVENT_ALL, event_data);
 	}

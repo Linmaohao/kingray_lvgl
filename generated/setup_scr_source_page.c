@@ -151,6 +151,8 @@ void setup_scr_source_page(lv_ui *ui)
 
 	}
 
+	lv_indev_set_group(indev_keypad, ui->source_page_group);
+    lv_indev_set_group(indev_encoder, ui->source_page_group);
 
 	lv_group_focus_obj(ui->source_page_source[0]);
 	events_init_source_page(ui);

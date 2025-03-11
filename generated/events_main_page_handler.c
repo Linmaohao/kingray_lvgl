@@ -70,6 +70,7 @@ static void main_page_event_handler (lv_event_t *e)
 		{
 		  CommonCallback(key_value);
 		}
+		break;
 	}
 	default:
 		break;

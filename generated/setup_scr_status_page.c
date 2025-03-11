@@ -311,6 +311,9 @@ void setup_scr_status_page(lv_ui *ui)
 			lv_group_add_obj(ui->status_page_group, ui->status_page_btn_router[i][j]);
 		}
 	}
+
+	lv_indev_set_group(indev_keypad, ui->status_page_group);
+    lv_indev_set_group(indev_encoder, ui->status_page_group);
 	lv_group_focus_obj(ui->status_page_work_mode_select[0]);
 
 	events_init_status_page(ui);

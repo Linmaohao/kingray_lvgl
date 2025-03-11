@@ -9,16 +9,22 @@
 
 #include "events_init.h"
 #include <stdio.h>
+#include <sys/types.h>
 #include "lvgl.h"
 
 #if LV_USE_FREEMASTER
 #include "freemaster_client.h"
 #endif
 
+// 用作malloc的free标记，防止重复释放（有这种现象）
+static u_int8_t menu_item_free_glag[MENU_E_NUM] = {0};
+
 static void menu_page_item_event_handler (lv_event_t *e)
 {
 	lv_event_code_t code = lv_event_get_code(e);
 	lv_obj_t *obj = lv_event_get_target(e);
+	event_data_t *data = (event_data_t *)lv_event_get_user_data(e);
+
 	if (code >= LV_EVENT_COVER_CHECK && code <= LV_EVENT_DRAW_PART_END) {
 	} else {
 		printf("menu code = %d\n", code);
@@ -26,7 +32,6 @@ static void menu_page_item_event_handler (lv_event_t *e)
 	switch (code) {
 	case LV_EVENT_CLICKED:
 	{
-		event_data_t *data = (event_data_t *)lv_event_get_user_data(e);
 		switch(data->number) {
 			case MENU_E_VOLUME:
 				ui_load_scr_animation(&guider_ui, &guider_ui.volume_page, guider_ui.volume_page_del, &guider_ui.menu_page_del, setup_scr_volume_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
@@ -78,6 +83,18 @@ static void menu_page_item_event_handler (lv_event_t *e)
 		{
 		  CommonCallback(key_value);
 		}
+		break;
+	}
+	case LV_EVENT_DELETE:
+	{
+		if (data->number >= 0 && data->number < MENU_E_NUM && !menu_item_free_glag[data->number])
+		{
+			menu_item_free_glag[data->number] = 1;
+			// printf("!!!!!!!!!!!!!!!!!!!!! delete number = %d\n", data->number);
+			free(data);
+			data = NULL;
+		}
+		break;
 	}
 	default:
 		break;
@@ -126,6 +143,7 @@ static void menu_page_message_event_handler(lv_event_t *e)
 			default:
 				break;
 			}
+			break;
 		}
 		case LV_EVENT_FOCUSED:
 		{
@@ -137,7 +155,7 @@ static void menu_page_message_event_handler(lv_event_t *e)
 		case LV_EVENT_KEY:
 		{
 			// 不做处理
-		break;
+			break;
 		}
 		default:
 			break;
@@ -231,6 +249,7 @@ void events_init_menu_page(lv_ui *ui)
 	for (int i = 0; i < MENU_E_NUM; i++) {
 		event_data_t *event_data = (event_data_t *)malloc(sizeof(event_data_t));
 		event_data->number = i;
+		menu_item_free_glag[i] = 0;
 		// lv_obj_add_event_cb(ui->menu_page_item_container[i], menu_page_item_event_handler, LV_EVENT_ALL, event_data);
 		lv_obj_add_event_cb(ui->menu_page_item_container[i], menu_page_item_event_handler, LV_EVENT_ALL, event_data);
 	}

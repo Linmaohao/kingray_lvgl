@@ -9,11 +9,15 @@
 
 #include "events_init.h"
 #include <stdio.h>
+#include <sys/types.h>
 #include "lvgl.h"
 
 #if LV_USE_FREEMASTER
 #include "freemaster_client.h"
 #endif
+
+// 用作malloc的free标记，防止重复释放（有这种现象），IP占4，GW占4
+static u_int8_t ip_gw_free_glag[8] = {0};
 
 static void ipset_page_number_event_handler(lv_event_t *e)
 {
@@ -68,6 +72,18 @@ static void ipset_page_number_event_handler(lv_event_t *e)
 		{
 			CommonCallback(key_value);
 		}
+		break;
+	}
+	case LV_EVENT_DELETE:
+	{
+		if (data->number >= 0 && data->number < 8 && !ip_gw_free_glag[data->number])
+		{
+			ip_gw_free_glag[data->number] = 1;
+			// printf("!!!!!!!!!!!!!!!!!!!!! delete number = %d\n", data->number);
+			free(data);
+			data = NULL;
+		}
+		break;
 	}
 	default:
 		break;
@@ -84,6 +100,7 @@ void events_init_ipset_page(lv_ui *ui)
 	for (int i = 0; i < 8; i++){
 		event_data_t *event_data = (event_data_t *)malloc(sizeof(event_data_t));
 		event_data->number = i;
+		ip_gw_free_glag[i] = 0;
 
 		if (i >= 0 && i < 4){
 			lv_obj_add_event_cb(ui->ipset_page_ip[i], ipset_page_number_event_handler, LV_EVENT_ALL, event_data);
