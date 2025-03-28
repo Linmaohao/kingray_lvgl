@@ -50,10 +50,15 @@ static void main_page_event_handler (lv_event_t *e)
 
 	switch (code) {
 	// case LV_EVENT_CLICKED:	// 按下第一次是FOCUSED
+	case LV_EVENT_LONG_PRESSED:
+	{
+		printf("LONG PRESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+		ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.main_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+	}
 	case LV_EVENT_FOCUSED:
 	{
 		// ui_load_scr_animation(&guider_ui, &guider_ui.standby_page, guider_ui.standby_page_del, &guider_ui.main_page_del, setup_scr_standby_page, LV_SCR_LOAD_ANIM_NONE, 200, 200, true, true);
-		ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.main_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
+		//ui_load_scr_animation(&guider_ui, &guider_ui.menu_page, guider_ui.menu_page_del, &guider_ui.main_page_del, setup_scr_menu_page, LV_SCR_LOAD_ANIM_NONE, 5, 5, true, true);
 		break;
 	}
 	case LV_EVENT_KEY:
@@ -75,10 +80,11 @@ static void main_page_event_handler (lv_event_t *e)
 	default:
 		break;
 	}
+	printf("----\n");
 }
 
 void events_init_main_page(lv_ui *ui)
 {
 	//lv_obj_add_event_cb(ui->main_page_btn_test, main_page_btn_test_event_handler, LV_EVENT_ALL, NULL);
-	lv_obj_add_event_cb(ui->main_page, main_page_event_handler, LV_EVENT_ALL, NULL);
+	lv_obj_add_event_cb(ui->main_page_temp_btn, main_page_event_handler, LV_EVENT_ALL, NULL);
 }

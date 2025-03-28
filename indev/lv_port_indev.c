@@ -95,6 +95,7 @@ void lv_port_indev_init(void)
     lv_indev_drv_init(&indev_drv_encoder);
     indev_drv_encoder.type = LV_INDEV_TYPE_ENCODER;
     indev_drv_encoder.read_cb = encoder_read;
+    indev_drv_encoder.long_press_time = 2000;   // 加2秒做为长按键
     indev_encoder = lv_indev_drv_register(&indev_drv_encoder);
 
     /*Later you should create group(s) with `lv_group_t * group = lv_group_create()`,
@@ -167,18 +168,26 @@ static void encoder_init(void)
 {
     indev_init();
 }
-
+extern int encoder_enter_status;
 /*Will be called by the library to read the encoder*/
 static void encoder_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 {
     // printf("start now time = %lu\n", get_jiffies());
     operate_status_t encoder_act = indev_scan_encoder();
-    encoder_state = LV_INDEV_STATE_REL;
+    if (encoder_enter_status)
+        encoder_state = LV_INDEV_STATE_PR;
+    else
+        encoder_state = LV_INDEV_STATE_REL;
+
     encoder_diff = 0;
     switch(encoder_act) {
         case ENCODER_STATUS_ENTER:
             encoder_diff = 0;
             encoder_state = LV_INDEV_STATE_PR;
+            break;
+        case ENCODER_STATUS_RELEASE:
+            encoder_diff = 0;
+            encoder_state = LV_INDEV_STATE_REL;
             break;
         case ENCODER_STATUS_RIGHT:
             encoder_diff = 1;
@@ -197,11 +206,12 @@ static void encoder_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
     //     printf("continue flag enable\n");
     //     data->continue_reading = true;
     // }
-
+    // if (encoder_act == KEY_STATUS_NOTHING || encoder_act == ENCODER_STATUS_ENTER) return;
     data->enc_diff = encoder_diff;
     data->state = encoder_state;
     // printf("end now time = %lu\n", get_jiffies());
-    if (data->enc_diff == 0 && data->state == 0) return;
+    // if (data->enc_diff == 0 && data->state == 0) return;
+
     // printf("data->enc_diff = %d data->state = %d\n", data->enc_diff, data->state);
 }
 

@@ -193,6 +193,7 @@ operate_status_t handle_key(unsigned short value) {
     else return KEY_STATUS_NOTHING;
 }
 
+int encoder_enter_status = 0;
 // 编码器状态机
 operate_status_t handle_encoder(unsigned short value) {
 
@@ -200,12 +201,15 @@ operate_status_t handle_encoder(unsigned short value) {
         if (!encoder_confirm_pressed) {                 // 按键按下的初次检测
             encoder_confirm_pressed = true;
             printf("Encoder confirm key pressed\n");
+            encoder_enter_status = 1;
+            return ENCODER_STATUS_ENTER;
         }
     } else if (value & ENCODER_ENTER_BIT) {
         if (encoder_confirm_pressed) {
             encoder_confirm_pressed = false;            // 按键释放
             printf("Encoder confirm key released\n");
-            return ENCODER_STATUS_ENTER;
+            encoder_enter_status = 0;
+            return ENCODER_STATUS_RELEASE;
         }
     }
 

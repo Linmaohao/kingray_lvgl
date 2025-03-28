@@ -75,6 +75,7 @@ typedef struct
 	lv_obj_t *main_page_out_volume_unit[LAYOUT_OUTPUT_SIZE];
 	lv_obj_t *main_page_out_volume_unit_line[LAYOUT_OUTPUT_SIZE];
 	lv_obj_t *main_page_out_gain_limit[LAYOUT_OUTPUT_SIZE];
+	lv_obj_t *main_page_temp_btn;
 
 	// lv_obj_t *main_page_btn_test;
 	// lv_obj_t *main_page_btn_test_label;
@@ -237,6 +238,7 @@ LV_FONT_DECLARE(lv_font_montserratMedium_24)
 LV_FONT_DECLARE(lv_font_montserratMedium_22)
 LV_FONT_DECLARE(lv_font_montserratMedium_8)
 LV_FONT_DECLARE(lv_front_source_fzltxh_20)
+LV_FONT_DECLARE(lv_front_source_kyrilla_20)
 
 #ifdef __cplusplus
 }

@@ -77,7 +77,8 @@ void create_preset_message_box(void) {
 	lv_obj_set_size(guider_ui.preset_page_message_box, 200, 80);
 
 	lv_obj_set_style_bg_opa(guider_ui.preset_page_message_box, LV_OPA_COVER, LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_obj_set_style_bg_color(guider_ui.preset_page_message_box, lv_palette_main(LV_PALETTE_RED), LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_obj_set_style_bg_color(guider_ui.preset_page_message_box, lv_palette_main(LV_PALETTE_RED), LV_PART_MAIN|LV_STATE_DEFAULT);
+	lv_obj_set_style_bg_color(guider_ui.preset_page_message_box, lv_palette_main(LV_PALETTE_BLUE), LV_PART_MAIN|LV_STATE_DEFAULT);
 
 	//Write style state: LV_STATE_DEFAULT for &style_content_main_default
 	static lv_style_t style_content_main_default;
@@ -113,10 +114,10 @@ void create_preset_message_box(void) {
 
 
 	// 添加焦点样式
-	// lv_obj_set_style_bg_opa(btns, LV_OPA_COVER, LV_PART_ITEMS | LV_STATE_FOCUSED);
-	// lv_obj_set_style_bg_color(btns, lv_palette_main(LV_PALETTE_GREEN), LV_PART_ITEMS | LV_STATE_FOCUSED);
-	// lv_obj_set_style_text_color(btns, lv_color_black(), LV_PART_ITEMS | LV_STATE_FOCUSED);
-	// lv_obj_set_style_text_opa(btns, LV_OPA_COVER, LV_PART_ITEMS | LV_STATE_FOCUSED);
+	lv_obj_set_style_bg_opa(btns, LV_OPA_COVER, LV_PART_ITEMS | LV_STATE_FOCUSED);
+	lv_obj_set_style_bg_color(btns, lv_palette_main(LV_PALETTE_GREEN), LV_PART_ITEMS | LV_STATE_FOCUSED);
+	lv_obj_set_style_text_color(btns, lv_color_black(), LV_PART_ITEMS | LV_STATE_FOCUSED);
+	lv_obj_set_style_text_opa(btns, LV_OPA_COVER, LV_PART_ITEMS | LV_STATE_FOCUSED);
 
 
 	lv_group_add_obj(guider_ui.preset_page_message_group, btns);

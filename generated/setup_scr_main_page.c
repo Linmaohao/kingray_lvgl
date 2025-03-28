@@ -107,8 +107,11 @@ void setup_scr_main_page(lv_ui *ui)
 	ui->main_page_device_name = lv_label_create(ui->main_page);
 	// lv_label_set_text(ui->main_page_device_name, "43Az");
 
-	lv_obj_set_style_text_font(ui->main_page_device_name, &lv_front_source_fzltxh_20,  LV_PART_MAIN|LV_STATE_DEFAULT);
-	lv_label_set_text(ui->main_page_device_name, "嵌入式测试");
+	// lv_obj_set_style_text_font(ui->main_page_device_name, &lv_front_source_fzltxh_20,  LV_PART_MAIN|LV_STATE_DEFAULT);
+	// lv_label_set_text(ui->main_page_device_name, "錢譯兒嵌入式测试");
+
+	lv_obj_set_style_text_font(ui->main_page_device_name, &lv_front_source_kyrilla_20,  LV_PART_MAIN|LV_STATE_DEFAULT);
+	lv_label_set_text(ui->main_page_device_name, "ий язык");
 
 	lv_label_set_long_mode(ui->main_page_device_name, LV_LABEL_LONG_WRAP);
 	lv_obj_set_pos(ui->main_page_device_name, MAIN_PAGE_DEV_NAME_X, MAIN_PAGE_DEV_NAME_Y);
@@ -370,9 +373,12 @@ void setup_scr_main_page(lv_ui *ui)
     lv_indev_set_group(indev_keypad, ui->main_page_group);
     lv_indev_set_group(indev_encoder, ui->main_page_group);
 
-	lv_group_add_obj(ui->main_page_group, ui->main_page);
+	// 用来点击
+	ui->main_page_temp_btn = lv_btn_create(ui->main_page);
+	lv_obj_add_flag(ui->main_page_temp_btn, LV_OBJ_FLAG_HIDDEN);
+	lv_group_add_obj(ui->main_page_group, ui->main_page_temp_btn);
 	// focus 无效，点击第一次才会自动focus
-	// lv_group_focus_obj(ui->main_page);
+	lv_group_focus_obj(ui->main_page_temp_btn);
 
 	// // 检查焦点状态
 	// if (lv_group_get_focused(ui->main_page_group) == ui->main_page) {
